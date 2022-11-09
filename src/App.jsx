@@ -8,11 +8,9 @@ import { Notification } from 'components/Notification/Notification';
 import { useState } from 'react';
 
 export const App = () => {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
+  const [feedback, setFeedback] = useState({ good: 0, neutral: 0, bad: 0 });
 
-  const options = { good, neutral, bad };
+  let { good, neutral, bad } = feedback;
   let total = 0;
   let positivePercentage = 1;
 
@@ -25,27 +23,15 @@ export const App = () => {
     return (positivePercentage = parseInt((good / total) * 100));
   };
 
-  const onFeedbackIncrement = buttonName => {
-    switch (buttonName) {
-      case 'good':
-        setGood(good => good + 1);
-        break;
-      case 'neutral':
-        setNeutral(neutral => neutral + 1);
-        break;
-      case 'bad':
-        setBad(bad => bad + 1);
-        break;
-      default:
-        throw new Error('Something went wrong');
-    }
+  const onFeedbackIncrement = btnType => {
+    setFeedback(state => ({ ...state, [btnType]: state[btnType] + 1 }));
   };
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" mt={10}>
       <Section title="Please leave feedback">
         <FeedbackOptions
-          options={Object.keys(options)}
+          options={Object.keys(feedback)}
           onLeaveFeedback={onFeedbackIncrement}
         />
       </Section>
